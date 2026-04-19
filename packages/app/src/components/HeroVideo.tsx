@@ -1,6 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { Video, ResizeMode } from 'expo-av';
+import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, {
   useAnimatedStyle,
@@ -11,6 +10,17 @@ import Animated, {
 import { Colors, Typography, Spacing, Layout } from '../theme';
 import { ChipBadge } from './ChipBadge';
 
+// Conditionally import expo-av — it can crash on web
+let VideoComponent: any = null;
+let ResizeModeValue: any = null;
+try {
+  const av = require('expo-av');
+  VideoComponent = av.Video;
+  ResizeModeValue = av.ResizeMode?.COVER ?? 'cover';
+} catch {
+  // expo-av not available on web — skip video
+}
+
 interface Props {
   scrollY: SharedValue<number>;
   recovery: number;
@@ -20,7 +30,12 @@ interface Props {
   onPlanSession?: () => void;
 }
 
-const waterVideo = require('../../../video/water.mp4');
+let waterVideo: any = null;
+try {
+  waterVideo = require('../../../video/water.mp4');
+} catch {
+  // video asset not found — use fallback
+}
 
 export const HeroVideo: React.FC<Props> = ({
   scrollY,
@@ -48,15 +63,19 @@ export const HeroVideo: React.FC<Props> = ({
 
   return (
     <Animated.View style={[styles.hero, heroAnimStyle]}>
-      {/* Video background */}
-      <Video
-        source={waterVideo}
-        style={StyleSheet.absoluteFillObject}
-        resizeMode={ResizeMode.COVER}
-        shouldPlay
-        isLooping
-        isMuted
-      />
+      {/* Video background — falls back to solid color on web */}
+      {VideoComponent && waterVideo ? (
+        <VideoComponent
+          source={waterVideo}
+          style={StyleSheet.absoluteFillObject}
+          resizeMode={ResizeModeValue}
+          shouldPlay
+          isLooping
+          isMuted
+        />
+      ) : (
+        <View style={[StyleSheet.absoluteFillObject, { backgroundColor: Colors.primaryDark }]} />
+      )}
 
       {/* Dark gradient overlay */}
       <LinearGradient

@@ -2,7 +2,7 @@
 
 ## What is SWYM?
 
-SWYM (WeSwym) is a real-time pace coaching system for competitive swimmers using Ultra-Wideband (UWB) technology and smart rings. It delivers split-second, actionable coaching instructions during swimming — for both individual swimmers and coaches managing group training sessions.
+SWYM  is a real-time pace coaching system for competitive swimmers using Ultra-Wideband (UWB) technology and smart rings. It delivers split-second, actionable coaching instructions during swimming — for both individual swimmers and coaches managing group training sessions.
 
 The device UI is designed for pool-side visibility: large fonts, high contrast, dark backgrounds, and color-coded status (green = on-pace, amber = slightly off, red = significantly off). Navigation is intentionally two-button simple for wet/cold use.
 

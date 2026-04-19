@@ -9,7 +9,8 @@
     "dev:device": "turbo dev --filter=@swym/device-ui",
     "build:device": "turbo build --filter=@swym/device-ui",
     "dev:app": "turbo dev --filter=@swym/app",
-    "dev:mobile": "cd packages/mobile-app && npx expo start"
+    "build:app": "turbo build --filter=@swym/app",
+    "start": "turbo dev"
   },
   "devDependencies": {
     "turbo": "^2.4.0",
