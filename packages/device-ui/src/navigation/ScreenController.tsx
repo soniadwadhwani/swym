@@ -135,7 +135,7 @@ export const ScreenController: React.FC<ScreenControllerProps> = ({
             color: colors.purple,
             letterSpacing: '-0.02em',
           }}>
-            WeSwym
+            Swym
           </div>
           <div style={{
             fontSize: deviceFontSizes.label,

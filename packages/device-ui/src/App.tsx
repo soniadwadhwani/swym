@@ -116,7 +116,7 @@ export const App: React.FC = () => {
           color: colors.purple,
           marginRight: spacing.lg,
         }}>
-          WeSwym Device
+          Swym Device
         </div>
 
         {/* Mode toggle */}
