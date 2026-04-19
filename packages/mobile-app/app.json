@@ -1,0 +1,25 @@
+{
+  "expo": {
+    "name": "SWYM",
+    "slug": "swym",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "backgroundColor": "#140C32"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.swym.app"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#140C32"
+      },
+      "package": "com.swym.app"
+    },
+    "plugins": [
+      "expo-av"
+    ]
+  }
+}
