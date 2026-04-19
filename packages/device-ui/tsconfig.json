@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "noEmit": true,
+    "paths": {
+      "@swym/design-system": ["../design-system/src"],
+      "@swym/design-system/*": ["../design-system/src/*"]
+    }
+  },
+  "include": ["src"]
+}
