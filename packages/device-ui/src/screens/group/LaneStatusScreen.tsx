@@ -12,12 +12,10 @@ interface LaneStatusScreenProps {
  *
  * ONE JOB: "Who needs my attention right now?"
  *
- * Compact ranked list of 5-7 swimmers. Each row shows name, current lap,
- * and a COLOR-CODED STATUS PILL (not numeric delta).
- * Coach's eye goes straight to red rows.
+ * Compact ranked list. Coach's eye goes straight to red pills.
+ * Frosted glass rows, teal accent for top performer.
  */
 export const LaneStatusScreen: React.FC<LaneStatusScreenProps> = ({ rings }) => {
-  // Sort by delta ascending (best performers first)
   const sorted = [...rings]
     .filter(r => !r.signalLost)
     .sort((a, b) => a.deltaMs - b.deltaMs);
@@ -27,21 +25,9 @@ export const LaneStatusScreen: React.FC<LaneStatusScreenProps> = ({ rings }) => 
       display: 'flex',
       flexDirection: 'column',
       height: '100%',
-      padding: deviceLayout.screenPadding,
+      padding: `0 ${deviceLayout.screenPadding}px`,
+      paddingBottom: deviceLayout.screenPadding,
     }}>
-      {/* Header */}
-      <div style={{
-        fontSize: deviceFontSizes.heading,
-        fontWeight: fontWeights.medium,
-        color: colors.gray400,
-        textTransform: 'uppercase',
-        letterSpacing: '0.06em',
-        textAlign: 'center',
-        marginBottom: spacing.lg,
-      }}>
-        Lane Status
-      </div>
-
       {/* Swimmer rows */}
       <div style={{
         flex: 1,
@@ -56,10 +42,10 @@ export const LaneStatusScreen: React.FC<LaneStatusScreenProps> = ({ rings }) => 
               display: 'flex',
               alignItems: 'center',
               height: deviceLayout.rowHeight,
-              padding: `0 ${spacing.md}px`,
-              background: index === 0 ? `${colors.purple}18` : colors.gray800,
-              borderRadius: 8,
-              borderLeft: index === 0 ? `3px solid ${colors.purple}` : '3px solid transparent',
+              padding: `0 ${spacing.lg}px`,
+              background: 'rgba(255,255,255,0.04)',
+              borderRadius: 12,
+              borderLeft: index === 0 ? `3px solid ${colors.accent}` : '3px solid transparent',
             }}
           >
             {/* Name */}
@@ -75,14 +61,14 @@ export const LaneStatusScreen: React.FC<LaneStatusScreenProps> = ({ rings }) => 
             {/* Current lap */}
             <div style={{
               fontSize: deviceFontSizes.body,
-              color: colors.gray400,
+              color: 'rgba(255,255,255,0.40)',
               marginRight: spacing.lg,
-              fontWeight: fontWeights.medium,
+              fontWeight: fontWeights.light,
             }}>
               Lap {ring.currentLap}/{ring.totalLaps}
             </div>
 
-            {/* Status pill — NOT numeric delta */}
+            {/* Status pill */}
             <StatusPill status={ring.paceStatus} />
           </div>
         ))}

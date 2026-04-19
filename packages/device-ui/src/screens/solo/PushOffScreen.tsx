@@ -14,8 +14,7 @@ interface PushOffScreenProps {
  * ONE JOB: "What does this lap need from me?"
  *
  * Shows ONLY: set name, target for this lap, lap X of Y.
- * No elapsed time, no total distance, no delta.
- * This is what the swimmer reads in the 10 seconds before pushing off.
+ * Premium minimal — generous whitespace, large hero target.
  */
 export const PushOffScreen: React.FC<PushOffScreenProps> = ({ ring, currentSet }) => {
   const setName = currentSet?.name ?? 'Free Swim';
@@ -32,16 +31,16 @@ export const PushOffScreen: React.FC<PushOffScreenProps> = ({ ring, currentSet }
       justifyContent: 'center',
       height: '100%',
       padding: deviceLayout.screenPadding,
-      gap: spacing['2xl'],
+      gap: spacing['3xl'],
     }}>
       {/* Set name */}
       <div style={{
-        fontSize: deviceFontSizes.heading,
-        fontWeight: fontWeights.medium,
-        color: colors.gray400,
+        fontSize: deviceFontSizes.caption,
+        fontWeight: fontWeights.light,
+        color: 'rgba(255,255,255,0.40)',
         textAlign: 'center',
         textTransform: 'uppercase',
-        letterSpacing: '0.06em',
+        letterSpacing: '0.12em',
       }}>
         {setName}
       </div>
@@ -49,12 +48,12 @@ export const PushOffScreen: React.FC<PushOffScreenProps> = ({ ring, currentSet }
       {/* Target pace — the hero number */}
       <div style={{ textAlign: 'center' }}>
         <div style={{
-          fontSize: deviceFontSizes.label,
-          fontWeight: fontWeights.medium,
-          color: colors.gray500,
+          fontSize: deviceFontSizes.caption,
+          fontWeight: fontWeights.light,
+          color: 'rgba(255,255,255,0.40)',
           marginBottom: spacing.sm,
           textTransform: 'uppercase',
-          letterSpacing: '0.04em',
+          letterSpacing: '0.10em',
         }}>
           Target
         </div>
@@ -71,9 +70,10 @@ export const PushOffScreen: React.FC<PushOffScreenProps> = ({ ring, currentSet }
 
       {/* Lap counter */}
       <div style={{
-        fontSize: deviceFontSizes.metricLarge,
+        fontSize: deviceFontSizes.metric,
         fontWeight: fontWeights.medium,
-        color: colors.purple,
+        color: colors.accent,
+        letterSpacing: '-0.01em',
       }}>
         Lap {currentLap} of {totalLaps || '—'}
       </div>

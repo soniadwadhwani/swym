@@ -1,6 +1,6 @@
 import React from 'react';
 import { PaceStatus } from '@swym/design-system';
-import { colors, deviceFontSizes, fontWeights, spacing } from '@swym/design-system';
+import { colors, deviceFontSizes, fontWeights } from '@swym/design-system';
 
 interface StatusPillProps {
   status: PaceStatus;
@@ -9,14 +9,14 @@ interface StatusPillProps {
 }
 
 const pillStyles: Record<PaceStatus, { bg: string; text: string; label: string }> = {
-  [PaceStatus.OnPace]: { bg: colors.green, text: colors.white, label: 'On Pace' },
-  [PaceStatus.Ahead]: { bg: colors.green, text: colors.white, label: 'Ahead' },
-  [PaceStatus.SlightlyOff]: { bg: colors.amber, text: colors.gray900, label: 'Behind' },
-  [PaceStatus.SignificantlyOff]: { bg: colors.red, text: colors.white, label: 'Off Pace' },
+  [PaceStatus.OnPace]: { bg: 'rgba(9,177,190,0.15)', text: colors.accent, label: 'On Pace' },
+  [PaceStatus.Ahead]: { bg: 'rgba(9,177,190,0.15)', text: colors.accent, label: 'Ahead' },
+  [PaceStatus.SlightlyOff]: { bg: 'rgba(239,159,39,0.15)', text: colors.amber, label: 'Behind' },
+  [PaceStatus.SignificantlyOff]: { bg: 'rgba(226,75,74,0.20)', text: colors.red, label: 'Off Pace' },
 };
 
 /**
- * Color-coded pace status pill for group mode.
+ * Frosted glass pace status pill for group mode.
  * Coach's eye goes to red pills, not to numbers.
  */
 export const StatusPill: React.FC<StatusPillProps> = ({ status, label }) => {
@@ -27,12 +27,13 @@ export const StatusPill: React.FC<StatusPillProps> = ({ status, label }) => {
         display: 'inline-block',
         backgroundColor: style.bg,
         color: style.text,
-        fontSize: deviceFontSizes.body,
+        fontSize: deviceFontSizes.statusBadge,
         fontWeight: fontWeights.medium,
-        padding: `${spacing.xs}px ${spacing.md}px`,
+        padding: '3px 12px',
         borderRadius: 20,
         whiteSpace: 'nowrap',
-        lineHeight: 1.2,
+        lineHeight: 1.3,
+        letterSpacing: '0.02em',
       }}
     >
       {label ?? style.label}

@@ -19,9 +19,8 @@ interface WallScreenProps {
  *
  * ONE JOB: "How was that lap and what do I adjust?"
  *
- * Auto-triggers on every wall-touch. The swimmer has 2 seconds of attention.
- * Dominant coaching instruction, last lap time, delta in color,
- * single-word trend indicator (IMPROVING / STEADY / FADING).
+ * Premium minimal: coaching instruction as hero text, frosted glass metric tiles,
+ * teal trend pill, subtle footer hint.
  */
 export const WallScreen: React.FC<WallScreenProps> = ({ instruction }) => {
   if (!instruction) {
@@ -31,8 +30,9 @@ export const WallScreen: React.FC<WallScreenProps> = ({ instruction }) => {
         alignItems: 'center',
         justifyContent: 'center',
         height: '100%',
-        color: colors.gray500,
+        color: 'rgba(255,255,255,0.30)',
         fontSize: deviceFontSizes.heading,
+        fontWeight: fontWeights.light,
       }}>
         Waiting for lap…
       </div>
@@ -44,9 +44,9 @@ export const WallScreen: React.FC<WallScreenProps> = ({ instruction }) => {
       display: 'flex',
       flexDirection: 'column',
       height: '100%',
-      padding: deviceLayout.screenPadding,
+      padding: `0 ${deviceLayout.screenPadding}px`,
     }}>
-      {/* Coaching instruction — dominant, top, large */}
+      {/* Coaching instruction — dominant hero text */}
       <div style={{
         flex: 1,
         display: 'flex',
@@ -59,37 +59,23 @@ export const WallScreen: React.FC<WallScreenProps> = ({ instruction }) => {
           fontSize: deviceFontSizes.instruction,
           fontWeight: fontWeights.medium,
           color: colors.white,
-          lineHeight: 1.35,
+          lineHeight: 1.4,
           maxWidth: '100%',
+          letterSpacing: '0.01em',
         }}>
           {instruction.text}
         </div>
       </div>
 
-      {/* Stats row: Last Lap | Delta */}
+      {/* Frosted glass metric tiles */}
       <div style={{
         display: 'flex',
         gap: spacing.md,
         marginBottom: spacing.lg,
       }}>
         {/* Last lap time */}
-        <div style={{
-          flex: 1,
-          background: colors.gray800,
-          borderRadius: 8,
-          padding: spacing.md,
-          textAlign: 'center',
-        }}>
-          <div style={{
-            fontSize: deviceFontSizes.body,
-            fontWeight: fontWeights.medium,
-            color: colors.gray400,
-            marginBottom: spacing.xs,
-            textTransform: 'uppercase',
-            letterSpacing: '0.04em',
-          }}>
-            Last Lap
-          </div>
+        <div style={frostedTileStyle}>
+          <div style={tileLabelStyle}>Last Lap</div>
           <div style={{
             fontSize: deviceFontSizes.metricLarge,
             fontWeight: fontWeights.medium,
@@ -100,23 +86,8 @@ export const WallScreen: React.FC<WallScreenProps> = ({ instruction }) => {
         </div>
 
         {/* Delta vs target */}
-        <div style={{
-          flex: 1,
-          background: colors.gray800,
-          borderRadius: 8,
-          padding: spacing.md,
-          textAlign: 'center',
-        }}>
-          <div style={{
-            fontSize: deviceFontSizes.body,
-            fontWeight: fontWeights.medium,
-            color: colors.gray400,
-            marginBottom: spacing.xs,
-            textTransform: 'uppercase',
-            letterSpacing: '0.04em',
-          }}>
-            vs Target
-          </div>
+        <div style={frostedTileStyle}>
+          <div style={tileLabelStyle}>vs Target</div>
           <PaceDelta
             deltaMs={instruction.deltaMs}
             paceStatus={instruction.paceStatus}
@@ -125,7 +96,7 @@ export const WallScreen: React.FC<WallScreenProps> = ({ instruction }) => {
         </div>
       </div>
 
-      {/* Trend word */}
+      {/* Trend word pill */}
       <div style={{
         textAlign: 'center',
         marginBottom: spacing.lg,
@@ -133,15 +104,33 @@ export const WallScreen: React.FC<WallScreenProps> = ({ instruction }) => {
         <TrendWord direction={instruction.trendDirection} />
       </div>
 
-      {/* Footer */}
+      {/* Footer hint */}
       <div style={{
         textAlign: 'center',
-        fontSize: deviceFontSizes.body,
-        color: colors.gray500,
-        paddingBottom: spacing.sm,
+        fontSize: deviceFontSizes.hint,
+        color: 'rgba(255,255,255,0.40)',
+        paddingBottom: spacing.lg,
       }}>
         press either button to continue
       </div>
     </div>
   );
+};
+
+const frostedTileStyle: React.CSSProperties = {
+  flex: 1,
+  background: 'rgba(255,255,255,0.06)',
+  border: '1px solid rgba(255,255,255,0.10)',
+  borderRadius: 16,
+  padding: '10px 16px',
+  textAlign: 'center',
+};
+
+const tileLabelStyle: React.CSSProperties = {
+  fontSize: deviceFontSizes.caption,
+  fontWeight: fontWeights.light,
+  color: 'rgba(255,255,255,0.40)',
+  marginBottom: spacing.xs,
+  textTransform: 'uppercase',
+  letterSpacing: '0.08em',
 };

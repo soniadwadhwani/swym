@@ -1,7 +1,7 @@
 import { colors, fontFamily } from '@swym/design-system';
 
 /**
- * Global device CSS — dark background, high contrast for pool readability.
+ * Global device CSS — deep navy background, premium minimal aesthetic.
  * Applied once at app mount.
  */
 export function applyGlobalStyles() {
@@ -23,6 +23,7 @@ export function applyGlobalStyles() {
       font-weight: 400;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
+      letter-spacing: 0.01em;
     }
 
     #root {

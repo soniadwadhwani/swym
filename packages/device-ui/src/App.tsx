@@ -113,7 +113,7 @@ export const App: React.FC = () => {
         <div style={{
           fontSize: deviceFontSizes.heading,
           fontWeight: fontWeights.medium,
-          color: colors.purple,
+          color: colors.accent,
           marginRight: spacing.lg,
         }}>
           Swym Device
@@ -140,10 +140,10 @@ export const App: React.FC = () => {
             value={simSpeed}
             onChange={e => { if (!isRunning) setSimSpeed(Number(e.target.value)); }}
             style={{
-              background: colors.gray800,
+              background: 'rgba(255,255,255,0.06)',
               color: colors.white,
-              border: `1px solid ${colors.gray700}`,
-              borderRadius: 6,
+              border: '1px solid rgba(255,255,255,0.10)',
+              borderRadius: 8,
               padding: '4px 8px',
               fontSize: 13,
             }}
@@ -162,7 +162,7 @@ export const App: React.FC = () => {
               type="checkbox"
               checked={groupAutoCycle}
               onChange={e => setGroupAutoCycle(e.target.checked)}
-              style={{ accentColor: colors.purple }}
+              style={{ accentColor: colors.accent }}
             />
             Auto-cycle
           </label>
@@ -194,14 +194,13 @@ export const App: React.FC = () => {
           width: 480,
           height: 320,
           background: colors.gray900,
-          borderRadius: 16,
-          border: `2px solid ${colors.gray700}`,
+          borderRadius: 12,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          color: colors.gray600,
+          color: 'rgba(255,255,255,0.30)',
           fontSize: deviceFontSizes.heading,
-          boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
+          fontWeight: fontWeights.light,
         }}>
           Press "Start Session" to begin
         </div>
@@ -231,10 +230,10 @@ function ToggleButton({ label, active, onClick }: { label: string; active: boole
     <button
       onClick={onClick}
       style={{
-        background: active ? colors.purple : colors.gray800,
-        color: active ? colors.white : colors.gray400,
-        border: `1px solid ${active ? colors.purple : colors.gray700}`,
-        borderRadius: 6,
+        background: active ? colors.accent : 'rgba(255,255,255,0.06)',
+        color: active ? colors.white : 'rgba(255,255,255,0.50)',
+        border: `1px solid ${active ? colors.accent : 'rgba(255,255,255,0.10)'}`,
+        borderRadius: 8,
         padding: '6px 16px',
         fontSize: 13,
         fontWeight: fontWeights.medium,
@@ -248,7 +247,7 @@ function ToggleButton({ label, active, onClick }: { label: string; active: boole
 }
 
 const primaryBtnStyle: React.CSSProperties = {
-  background: colors.purple,
+  background: colors.accent,
   color: colors.white,
   border: 'none',
   borderRadius: 8,

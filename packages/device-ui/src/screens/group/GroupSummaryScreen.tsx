@@ -18,7 +18,6 @@ interface GroupSummaryScreenProps {
   lapHistories: LapHistory[];
   rings: RingState[];
   toleranceMs: number;
-  /** Ring ID selected via NFC tap for expanded detail, or null for overview */
   selectedRingId: string | null;
 }
 
@@ -27,9 +26,7 @@ interface GroupSummaryScreenProps {
  *
  * ONE JOB: "How did everyone do?"
  *
- * Each swimmer gets a compact row: name, on-pace %, best lap, trend direction.
- * Coach can scan the whole lane's performance in 15 seconds.
- * NFC ring tap shows only that swimmer's full individual summary.
+ * Compact table with frosted rows. NFC tap shows individual detail.
  */
 export const GroupSummaryScreen: React.FC<GroupSummaryScreenProps> = ({
   lapHistories,
@@ -37,7 +34,6 @@ export const GroupSummaryScreen: React.FC<GroupSummaryScreenProps> = ({
   toleranceMs,
   selectedRingId,
 }) => {
-  // If a swimmer is selected via NFC, show their detailed summary
   if (selectedRingId) {
     const history = lapHistories.find(h => h.ringId === selectedRingId);
     const ring = rings.find(r => r.ringId === selectedRingId);
@@ -46,7 +42,6 @@ export const GroupSummaryScreen: React.FC<GroupSummaryScreenProps> = ({
     }
   }
 
-  // Group overview: one row per swimmer
   const swimmerRows = lapHistories.map(history => {
     const ring = rings.find(r => r.ringId === history.ringId);
     const onPaceCount = history.laps.filter(l => isLapOnPace(l, toleranceMs)).length;
@@ -66,7 +61,6 @@ export const GroupSummaryScreen: React.FC<GroupSummaryScreenProps> = ({
     };
   });
 
-  // Sort by on-pace percentage descending
   swimmerRows.sort((a, b) => b.onPacePct - a.onPacePct);
 
   return (
@@ -74,30 +68,18 @@ export const GroupSummaryScreen: React.FC<GroupSummaryScreenProps> = ({
       display: 'flex',
       flexDirection: 'column',
       height: '100%',
-      padding: deviceLayout.screenPadding,
+      padding: `0 ${deviceLayout.screenPadding}px`,
+      paddingBottom: spacing.lg,
     }}>
-      {/* Header */}
-      <div style={{
-        fontSize: deviceFontSizes.heading,
-        fontWeight: fontWeights.medium,
-        color: colors.gray400,
-        textTransform: 'uppercase',
-        letterSpacing: '0.06em',
-        textAlign: 'center',
-        marginBottom: spacing.lg,
-      }}>
-        Set Summary
-      </div>
-
       {/* Column headers */}
       <div style={{
         display: 'flex',
-        padding: `0 ${spacing.md}px`,
+        padding: `0 ${spacing.lg}px`,
         marginBottom: spacing.sm,
       }}>
         <div style={{ flex: 1, ...headerStyle }}>Swimmer</div>
-        <div style={{ width: 70, textAlign: 'center', ...headerStyle }}>On Pace</div>
-        <div style={{ width: 70, textAlign: 'center', ...headerStyle }}>Best</div>
+        <div style={{ width: 65, textAlign: 'center', ...headerStyle }}>On Pace</div>
+        <div style={{ width: 65, textAlign: 'center', ...headerStyle }}>Best</div>
         <div style={{ width: 90, textAlign: 'center', ...headerStyle }}>Trend</div>
       </div>
 
@@ -115,33 +97,34 @@ export const GroupSummaryScreen: React.FC<GroupSummaryScreenProps> = ({
               display: 'flex',
               alignItems: 'center',
               height: deviceLayout.rowHeight,
-              padding: `0 ${spacing.md}px`,
-              background: colors.gray800,
-              borderRadius: 8,
+              padding: `0 ${spacing.lg}px`,
+              background: 'rgba(255,255,255,0.04)',
+              borderRadius: 10,
             }}
           >
             <div style={{
               flex: 1,
-              fontSize: deviceFontSizes.label,
+              fontSize: deviceFontSizes.body,
               fontWeight: fontWeights.medium,
               color: colors.white,
             }}>
               {row.name}
             </div>
             <div style={{
-              width: 70,
+              width: 65,
               textAlign: 'center',
-              fontSize: deviceFontSizes.label,
+              fontSize: deviceFontSizes.body,
               fontWeight: fontWeights.medium,
-              color: row.onPacePct >= 70 ? colors.green : row.onPacePct >= 40 ? colors.amber : colors.red,
+              color: row.onPacePct >= 70 ? colors.accent : row.onPacePct >= 40 ? colors.amber : colors.red,
             }}>
               {row.onPacePct}%
             </div>
             <div style={{
-              width: 70,
+              width: 65,
               textAlign: 'center',
-              fontSize: deviceFontSizes.label,
-              color: colors.gray300,
+              fontSize: deviceFontSizes.body,
+              color: 'rgba(255,255,255,0.50)',
+              fontWeight: fontWeights.light,
             }}>
               {row.bestLapMs > 0 ? formatTimeMs(row.bestLapMs) : '—'}
             </div>
@@ -152,12 +135,12 @@ export const GroupSummaryScreen: React.FC<GroupSummaryScreenProps> = ({
         ))}
       </div>
 
-      {/* Footer */}
+      {/* Footer hint */}
       <div style={{
         textAlign: 'center',
-        fontSize: deviceFontSizes.body,
-        color: colors.gray500,
-        paddingTop: spacing.md,
+        fontSize: deviceFontSizes.hint,
+        color: 'rgba(255,255,255,0.40)',
+        paddingTop: spacing.sm,
       }}>
         tap ring for individual detail • press button to continue
       </div>
@@ -166,11 +149,11 @@ export const GroupSummaryScreen: React.FC<GroupSummaryScreenProps> = ({
 };
 
 const headerStyle: React.CSSProperties = {
-  fontSize: 12,
-  fontWeight: '500',
-  color: colors.gray500,
+  fontSize: 10,
+  fontWeight: '300',
+  color: 'rgba(255,255,255,0.35)',
   textTransform: 'uppercase',
-  letterSpacing: '0.06em',
+  letterSpacing: '0.10em',
 };
 
 /**
@@ -199,8 +182,9 @@ function IndividualDetail({
       display: 'flex',
       flexDirection: 'column',
       height: '100%',
-      padding: deviceLayout.screenPadding,
-      gap: spacing.md,
+      padding: `0 ${deviceLayout.screenPadding}px`,
+      paddingBottom: spacing.lg,
+      gap: spacing.xl,
     }}>
       <div style={{
         display: 'flex',
@@ -210,7 +194,7 @@ function IndividualDetail({
         <div style={{
           fontSize: deviceFontSizes.heading,
           fontWeight: fontWeights.medium,
-          color: colors.teal,
+          color: colors.accent,
         }}>
           {ring.swimmerName}
         </div>
@@ -218,15 +202,15 @@ function IndividualDetail({
       </div>
 
       <div style={{ display: 'flex', gap: spacing.md }}>
-        <DetailTile label="Best Lap" value={formatTimeMs(best.splitTimeMs)} sub={`Lap ${best.lapNumber}`} color={colors.green} />
+        <DetailTile label="Best Lap" value={formatTimeMs(best.splitTimeMs)} sub={`Lap ${best.lapNumber}`} color={colors.accent} />
         <DetailTile label="Worst Lap" value={formatTimeMs(worst.splitTimeMs)} sub={`Lap ${worst.lapNumber}`} color={colors.red} />
-        <DetailTile label="On Pace" value={`${onPaceCount}/${laps.length}`} sub={`${onPacePct}%`} color={colors.purple} />
+        <DetailTile label="On Pace" value={`${onPaceCount}/${laps.length}`} sub={`${onPacePct}%`} color={colors.accent} />
       </div>
 
       <div style={{
         textAlign: 'center',
-        fontSize: deviceFontSizes.body,
-        color: colors.gray500,
+        fontSize: deviceFontSizes.hint,
+        color: 'rgba(255,255,255,0.40)',
         marginTop: 'auto',
       }}>
         tap ring again to return to group view
@@ -239,14 +223,15 @@ function DetailTile({ label, value, sub, color }: { label: string; value: string
   return (
     <div style={{
       flex: 1,
-      background: colors.gray800,
-      borderRadius: 8,
-      padding: spacing.md,
+      background: 'rgba(255,255,255,0.06)',
+      border: '1px solid rgba(255,255,255,0.10)',
+      borderRadius: 16,
+      padding: '10px 12px',
       textAlign: 'center',
     }}>
-      <div style={{ fontSize: 13, fontWeight: fontWeights.medium, color: colors.gray400, marginBottom: spacing.xs, textTransform: 'uppercase', letterSpacing: '0.04em' }}>{label}</div>
+      <div style={{ fontSize: 11, fontWeight: fontWeights.light, color: 'rgba(255,255,255,0.40)', marginBottom: 2, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{label}</div>
       <div style={{ fontSize: deviceFontSizes.metric, fontWeight: fontWeights.medium, color }}>{value}</div>
-      <div style={{ fontSize: 13, color: colors.gray500, marginTop: 2 }}>{sub}</div>
+      <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', marginTop: 1 }}>{sub}</div>
     </div>
   );
 }

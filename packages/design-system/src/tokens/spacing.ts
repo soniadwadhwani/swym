@@ -1,5 +1,5 @@
 // Design tokens: Spacing
-// 4px base unit scale
+// 4px base unit scale — more breathing room for premium aesthetic
 
 export const spacing = {
   xs: 4,
@@ -13,12 +13,12 @@ export const spacing = {
   '5xl': 48,
 } as const;
 
-// Device-specific layout values
+// Device-specific layout values — generous padding
 export const deviceLayout = {
-  screenPadding: 16,
-  rowHeight: 48,        // group mode swimmer row
-  leaderboardRowHeight: 56,
-  sectionGap: 16,
+  screenPadding: 20,
+  rowHeight: 44,        // group mode swimmer row
+  leaderboardRowHeight: 52,
+  sectionGap: 20,
   statTileGap: 12,
 } as const;
 

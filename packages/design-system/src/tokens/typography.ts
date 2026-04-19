@@ -1,21 +1,24 @@
 // Design tokens: Typography
-// Two weights only — Regular (400) for body/data, Medium (500) for labels/headings/metrics
+// Light (300) for labels, Regular (400) for body, Medium (500) for values/metrics
 
 export const fontWeights = {
+  light: '300',
   regular: '400',
   medium: '500',
 } as const;
 
-// Device display — must be legible from 1-2 metres in pool lighting
+// Device display — pushed up aggressively for pool visibility
 export const deviceFontSizes = {
-  body: 16,       // minimum on device
-  label: 18,
-  metric: 24,
-  metricLarge: 28,
-  metricHero: 36,  // lap counter, primary number
-  heading: 20,
-  instruction: 22, // coaching instruction text — dominant
-  statusBadge: 18,
+  hint: 11,          // subtle footer hints
+  caption: 12,       // muted labels
+  body: 14,          // secondary text
+  label: 16,         // light-weight labels
+  heading: 18,       // screen titles
+  metric: 24,        // standard metrics
+  metricLarge: 32,   // large values inside tiles
+  metricHero: 40,    // hero number — target, lap counter
+  instruction: 30,   // coaching instruction — the visual hero
+  statusBadge: 14,   // trend pill, verdict pill
 } as const;
 
 // App (React Native) — standard mobile scale

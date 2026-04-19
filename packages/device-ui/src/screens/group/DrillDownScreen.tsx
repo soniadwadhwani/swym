@@ -18,11 +18,8 @@ import { TrendWord } from '../../components/TrendWord';
 interface DrillDownScreenProps {
   ring: RingState | null;
   toleranceMs: number;
-  /** Total number of swimmers (for cycling indicator) */
   swimmerCount: number;
-  /** 1-based index of current swimmer */
   currentIndex: number;
-  /** Whether auto-cycle is active (showing worst-delta swimmer) */
   isAutoCycle: boolean;
 }
 
@@ -31,9 +28,7 @@ interface DrillDownScreenProps {
  *
  * ONE JOB: "What is happening with this specific swimmer?"
  *
- * Shows ONE swimmer's full data: name, current lap, last split, numeric delta,
- * trend word, and coaching instruction. Button press cycles to next swimmer.
- * NFC tap jumps directly. Auto-cycle option shows worst-delta swimmer.
+ * Premium minimal: hero coaching text, frosted glass tiles, trend pill.
  */
 export const DrillDownScreen: React.FC<DrillDownScreenProps> = ({
   ring,
@@ -49,8 +44,9 @@ export const DrillDownScreen: React.FC<DrillDownScreenProps> = ({
         alignItems: 'center',
         justifyContent: 'center',
         height: '100%',
-        color: colors.gray500,
+        color: 'rgba(255,255,255,0.30)',
         fontSize: deviceFontSizes.heading,
+        fontWeight: fontWeights.light,
       }}>
         No swimmer selected
       </div>
@@ -71,7 +67,8 @@ export const DrillDownScreen: React.FC<DrillDownScreenProps> = ({
       display: 'flex',
       flexDirection: 'column',
       height: '100%',
-      padding: deviceLayout.screenPadding,
+      padding: `0 ${deviceLayout.screenPadding}px`,
+      paddingBottom: spacing.lg,
       gap: spacing.md,
     }}>
       {/* Header: swimmer name + cycle indicator */}
@@ -83,63 +80,48 @@ export const DrillDownScreen: React.FC<DrillDownScreenProps> = ({
         <div style={{
           fontSize: deviceFontSizes.heading,
           fontWeight: fontWeights.medium,
-          color: colors.teal,
+          color: colors.accent,
         }}>
           {ring.swimmerName}
           {isAutoCycle && (
-            <span style={{ color: colors.amber, fontSize: deviceFontSizes.body, marginLeft: spacing.sm }}>
+            <span style={{ color: colors.amber, fontSize: deviceFontSizes.caption, marginLeft: spacing.sm, fontWeight: fontWeights.light }}>
               AUTO
             </span>
           )}
         </div>
         <div style={{
-          fontSize: deviceFontSizes.body,
-          color: colors.gray500,
+          fontSize: deviceFontSizes.caption,
+          color: 'rgba(255,255,255,0.30)',
+          fontWeight: fontWeights.light,
         }}>
           {currentIndex} / {swimmerCount}
         </div>
       </div>
 
-      {/* Current lap */}
-      <div style={{
-        fontSize: deviceFontSizes.metricHero,
-        fontWeight: fontWeights.medium,
-        color: colors.white,
-        textAlign: 'center',
-      }}>
-        Lap {ring.currentLap} of {ring.totalLaps}
-      </div>
-
-      {/* Stats row: Last Split | Delta */}
+      {/* Frosted glass stat tiles */}
       <div style={{ display: 'flex', gap: spacing.md }}>
-        <StatTile label="Last Split" value={formatTimeMs(ring.lastSplitMs)} />
-        <div style={{
-          flex: 1,
-          background: colors.gray800,
-          borderRadius: 8,
-          padding: spacing.md,
-          textAlign: 'center',
-        }}>
+        <div style={frostedTileStyle}>
+          <div style={tileLabelStyle}>Last Split</div>
           <div style={{
-            fontSize: deviceFontSizes.body,
+            fontSize: deviceFontSizes.metricLarge,
             fontWeight: fontWeights.medium,
-            color: colors.gray400,
-            marginBottom: spacing.xs,
-            textTransform: 'uppercase',
-            letterSpacing: '0.04em',
+            color: colors.white,
           }}>
-            vs Target
+            {formatTimeMs(ring.lastSplitMs)}
           </div>
+        </div>
+        <div style={frostedTileStyle}>
+          <div style={tileLabelStyle}>vs Target</div>
           <PaceDelta deltaMs={ring.deltaMs} paceStatus={ring.paceStatus} size="large" />
         </div>
       </div>
 
-      {/* Trend word */}
+      {/* Trend word pill */}
       <div style={{ textAlign: 'center' }}>
         <TrendWord direction={ring.trendDirection} />
       </div>
 
-      {/* Coaching instruction */}
+      {/* Coaching instruction — hero text */}
       <div style={{
         flex: 1,
         display: 'flex',
@@ -152,17 +134,18 @@ export const DrillDownScreen: React.FC<DrillDownScreenProps> = ({
           fontSize: deviceFontSizes.instruction,
           fontWeight: fontWeights.medium,
           color: colors.white,
-          lineHeight: 1.35,
+          lineHeight: 1.4,
+          letterSpacing: '0.01em',
         }}>
           {instruction.text}
         </div>
       </div>
 
-      {/* Footer */}
+      {/* Footer hint */}
       <div style={{
         textAlign: 'center',
-        fontSize: deviceFontSizes.body,
-        color: colors.gray500,
+        fontSize: deviceFontSizes.hint,
+        color: 'rgba(255,255,255,0.40)',
       }}>
         press button to cycle • tap ring for direct access
       </div>
@@ -170,32 +153,20 @@ export const DrillDownScreen: React.FC<DrillDownScreenProps> = ({
   );
 };
 
-function StatTile({ label, value }: { label: string; value: string }) {
-  return (
-    <div style={{
-      flex: 1,
-      background: colors.gray800,
-      borderRadius: 8,
-      padding: spacing.md,
-      textAlign: 'center',
-    }}>
-      <div style={{
-        fontSize: deviceFontSizes.body,
-        fontWeight: fontWeights.medium,
-        color: colors.gray400,
-        marginBottom: spacing.xs,
-        textTransform: 'uppercase',
-        letterSpacing: '0.04em',
-      }}>
-        {label}
-      </div>
-      <div style={{
-        fontSize: deviceFontSizes.metricLarge,
-        fontWeight: fontWeights.medium,
-        color: colors.white,
-      }}>
-        {value}
-      </div>
-    </div>
-  );
-}
+const frostedTileStyle: React.CSSProperties = {
+  flex: 1,
+  background: 'rgba(255,255,255,0.06)',
+  border: '1px solid rgba(255,255,255,0.10)',
+  borderRadius: 16,
+  padding: '10px 16px',
+  textAlign: 'center',
+};
+
+const tileLabelStyle: React.CSSProperties = {
+  fontSize: deviceFontSizes.caption,
+  fontWeight: fontWeights.light,
+  color: 'rgba(255,255,255,0.40)',
+  marginBottom: 2,
+  textTransform: 'uppercase',
+  letterSpacing: '0.08em',
+};

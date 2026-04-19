@@ -132,14 +132,15 @@ export const ScreenController: React.FC<ScreenControllerProps> = ({
           <div style={{
             fontSize: deviceFontSizes.metricHero,
             fontWeight: fontWeights.medium,
-            color: colors.purple,
+            color: colors.accent,
             letterSpacing: '-0.02em',
           }}>
             Swym
           </div>
           <div style={{
             fontSize: deviceFontSizes.label,
-            color: colors.gray500,
+            color: 'rgba(255,255,255,0.40)',
+            fontWeight: fontWeights.light,
           }}>
             {phase === 'idle' ? 'Ready — waiting for session' : 'Session complete'}
           </div>
@@ -269,38 +270,35 @@ function DeviceFrame({ mode, screenLabel, onButton, children }: DeviceFrameProps
       width: 480,
       height: 320,
       background: colors.gray900,
-      borderRadius: 16,
-      border: `2px solid ${colors.gray700}`,
+      borderRadius: 12,
       overflow: 'hidden',
       display: 'flex',
       flexDirection: 'column',
       position: 'relative',
-      boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
     }}>
-      {/* Top bar: mode indicator + screen label */}
+      {/* Top bar: mode indicator + screen label — minimal, no border */}
       <div style={{
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        padding: `${spacing.xs}px ${spacing.md}px`,
-        background: colors.gray800,
-        borderBottom: `1px solid ${colors.gray700}`,
+        padding: `${spacing.sm}px ${spacing.xl}px`,
         flexShrink: 0,
       }}>
         <span style={{
-          fontSize: 11,
+          fontSize: 10,
           fontWeight: fontWeights.medium,
-          color: colors.purple,
+          color: colors.accent,
           textTransform: 'uppercase',
-          letterSpacing: '0.08em',
+          letterSpacing: '0.14em',
         }}>
           {mode === DeviceMode.Solo ? 'SOLO' : 'GROUP'}
         </span>
         {screenLabel && (
           <span style={{
-            fontSize: 11,
-            color: colors.gray500,
-            fontWeight: fontWeights.medium,
+            fontSize: 10,
+            color: 'rgba(255,255,255,0.30)',
+            fontWeight: fontWeights.regular,
+            letterSpacing: '0.06em',
           }}>
             {screenLabel}
           </span>
@@ -312,41 +310,50 @@ function DeviceFrame({ mode, screenLabel, onButton, children }: DeviceFrameProps
         {children}
       </div>
 
-      {/* Button bar (visible, clickable) */}
+      {/* Ghost circle nav buttons — bottom corners */}
       {onButton && (
-        <div style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          padding: `${spacing.xs}px ${spacing.md}px`,
-          background: colors.gray800,
-          borderTop: `1px solid ${colors.gray700}`,
-          flexShrink: 0,
-        }}>
+        <>
           <button
             onClick={() => onButton(-1)}
-            style={buttonStyle}
+            style={{
+              ...ghostButtonStyle,
+              position: 'absolute',
+              bottom: 12,
+              left: 16,
+            }}
           >
-            ◄
+            ‹
           </button>
           <button
             onClick={() => onButton(1)}
-            style={buttonStyle}
+            style={{
+              ...ghostButtonStyle,
+              position: 'absolute',
+              bottom: 12,
+              right: 16,
+            }}
           >
-            ►
+            ›
           </button>
-        </div>
+        </>
       )}
     </div>
   );
 }
 
-const buttonStyle: React.CSSProperties = {
-  background: colors.gray700,
-  color: colors.gray300,
-  border: 'none',
-  borderRadius: 6,
-  padding: '4px 20px',
-  fontSize: 16,
+const ghostButtonStyle: React.CSSProperties = {
+  width: 36,
+  height: 36,
+  borderRadius: '50%',
+  background: 'transparent',
+  border: '1px solid rgba(255,255,255,0.15)',
+  color: 'rgba(255,255,255,0.50)',
+  fontSize: 18,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
   cursor: 'pointer',
   fontFamily: 'inherit',
+  padding: 0,
+  lineHeight: 1,
 };

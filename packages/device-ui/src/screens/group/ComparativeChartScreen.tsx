@@ -19,21 +19,20 @@ import {
   ComposedChart,
 } from 'recharts';
 
-// Swimmer identity colors for group chart lines
+// Swimmer identity colors — teal-forward palette
 const SWIMMER_COLORS = [
-  '#1D9E75', // teal
+  '#09b1be', // teal accent
   '#EF9F27', // amber
-  '#534AB7', // purple
+  '#a78bfa', // lavender
   '#E24B4A', // red
-  '#639922', // green
-  '#4ECDC4', // cyan
-  '#FF6B6B', // coral
-  '#45B7D1', // sky
+  '#34d399', // emerald
+  '#f472b6', // pink
+  '#fbbf24', // gold
+  '#60a5fa', // sky
 ];
 
 interface ComparativeChartScreenProps {
   lapHistories: LapHistory[];
-  /** Ring ID of swimmer to highlight (via NFC tap), or null for all */
   highlightedRingId: string | null;
 }
 
@@ -42,14 +41,12 @@ interface ComparativeChartScreenProps {
  *
  * ONE JOB: "How is the lane performing as a group?"
  *
- * All swimmers' pace lines on one chart. 10-20 second read for rest intervals.
- * NFC ring tap highlights one swimmer's line, dims all others.
+ * Multi-line chart, minimal axis styling, NFC highlight.
  */
 export const ComparativeChartScreen: React.FC<ComparativeChartScreenProps> = ({
   lapHistories,
   highlightedRingId,
 }) => {
-  // Build chart data: one row per lap number, one column per swimmer
   const maxLaps = Math.max(...lapHistories.map(h => h.laps.length), 0);
   const chartData = [];
   for (let i = 0; i < maxLaps; i++) {
@@ -59,7 +56,6 @@ export const ComparativeChartScreen: React.FC<ComparativeChartScreenProps> = ({
         row[history.ringId] = history.laps[i].splitTimeMs / 1000;
       }
     }
-    // Add target line from first swimmer (simplified)
     if (lapHistories[0]) {
       row['target'] = lapHistories[0].target.perLapMs / 1000;
     }
@@ -71,21 +67,10 @@ export const ComparativeChartScreen: React.FC<ComparativeChartScreenProps> = ({
       display: 'flex',
       flexDirection: 'column',
       height: '100%',
-      padding: deviceLayout.screenPadding,
-      gap: spacing.md,
+      padding: `0 ${deviceLayout.screenPadding}px`,
+      paddingBottom: deviceLayout.screenPadding,
+      gap: spacing.sm,
     }}>
-      {/* Header */}
-      <div style={{
-        fontSize: deviceFontSizes.heading,
-        fontWeight: fontWeights.medium,
-        color: colors.gray400,
-        textTransform: 'uppercase',
-        letterSpacing: '0.06em',
-        textAlign: 'center',
-      }}>
-        Pace Comparison
-      </div>
-
       {/* Legend */}
       <div style={{
         display: 'flex',
@@ -100,19 +85,19 @@ export const ComparativeChartScreen: React.FC<ComparativeChartScreenProps> = ({
               display: 'flex',
               alignItems: 'center',
               gap: spacing.xs,
-              opacity: highlightedRingId && highlightedRingId !== h.ringId ? 0.3 : 1,
+              opacity: highlightedRingId && highlightedRingId !== h.ringId ? 0.25 : 1,
             }}
           >
             <div style={{
-              width: 10,
-              height: 10,
+              width: 8,
+              height: 8,
               borderRadius: '50%',
               background: SWIMMER_COLORS[i % SWIMMER_COLORS.length],
             }} />
             <span style={{
-              fontSize: 13,
-              color: colors.gray300,
-              fontWeight: fontWeights.medium,
+              fontSize: 11,
+              color: 'rgba(255,255,255,0.60)',
+              fontWeight: fontWeights.light,
             }}>
               {h.swimmerName}
             </span>
@@ -126,25 +111,23 @@ export const ComparativeChartScreen: React.FC<ComparativeChartScreenProps> = ({
           <LineChart data={chartData}>
             <XAxis
               dataKey="lap"
-              tick={{ fill: colors.gray500, fontSize: 12 }}
-              axisLine={{ stroke: colors.gray700 }}
+              tick={{ fill: 'rgba(255,255,255,0.30)', fontSize: 11 }}
+              axisLine={{ stroke: 'rgba(255,255,255,0.08)' }}
               tickLine={false}
-              label={{ value: 'Lap', fill: colors.gray500, fontSize: 12, position: 'insideBottom', offset: -5 }}
             />
             <YAxis
-              tick={{ fill: colors.gray500, fontSize: 12 }}
+              tick={{ fill: 'rgba(255,255,255,0.30)', fontSize: 11 }}
               axisLine={false}
               tickLine={false}
-              width={45}
-              label={{ value: 'Split (s)', fill: colors.gray500, fontSize: 12, angle: -90, position: 'insideLeft' }}
+              width={40}
             />
             {/* Target line — dashed */}
             <Line
               dataKey="target"
-              stroke={colors.gray500}
+              stroke="rgba(255,255,255,0.20)"
               strokeDasharray="6 4"
               dot={false}
-              strokeWidth={1.5}
+              strokeWidth={1}
             />
             {/* Swimmer lines */}
             {lapHistories.map((h, i) => (
@@ -152,10 +135,10 @@ export const ComparativeChartScreen: React.FC<ComparativeChartScreenProps> = ({
                 key={h.ringId}
                 dataKey={h.ringId}
                 stroke={SWIMMER_COLORS[i % SWIMMER_COLORS.length]}
-                strokeWidth={highlightedRingId === h.ringId ? 3 : 1.5}
-                strokeOpacity={highlightedRingId && highlightedRingId !== h.ringId ? 0.2 : 1}
+                strokeWidth={highlightedRingId === h.ringId ? 2.5 : 1.5}
+                strokeOpacity={highlightedRingId && highlightedRingId !== h.ringId ? 0.15 : 0.9}
                 dot={false}
-                activeDot={highlightedRingId === h.ringId ? { r: 4 } : false}
+                activeDot={highlightedRingId === h.ringId ? { r: 3 } : false}
               />
             ))}
           </LineChart>
@@ -164,8 +147,8 @@ export const ComparativeChartScreen: React.FC<ComparativeChartScreenProps> = ({
 
       <div style={{
         textAlign: 'center',
-        fontSize: deviceFontSizes.body,
-        color: colors.gray500,
+        fontSize: deviceFontSizes.hint,
+        color: 'rgba(255,255,255,0.40)',
       }}>
         tap ring to highlight swimmer
       </div>

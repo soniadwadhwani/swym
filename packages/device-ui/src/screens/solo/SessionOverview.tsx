@@ -32,9 +32,7 @@ interface SessionOverviewProps {
  *
  * ONE JOB: "Where am I in the whole session?"
  *
- * For between-set rest intervals (60-90s), not between-lap rest.
- * Shows: total distance, elapsed time, sets remaining, last set's lap chart.
- * Navigated to manually — never auto-displays.
+ * For between-set rest intervals. Frosted glass metric tiles + lap chart.
  */
 export const SessionOverview: React.FC<SessionOverviewProps> = ({
   totalDistanceMetres,
@@ -52,22 +50,11 @@ export const SessionOverview: React.FC<SessionOverviewProps> = ({
       display: 'flex',
       flexDirection: 'column',
       height: '100%',
-      padding: deviceLayout.screenPadding,
+      padding: `0 ${deviceLayout.screenPadding}px`,
+      paddingBottom: deviceLayout.screenPadding,
       gap: spacing.lg,
     }}>
-      {/* Title */}
-      <div style={{
-        fontSize: deviceFontSizes.heading,
-        fontWeight: fontWeights.medium,
-        color: colors.gray400,
-        textTransform: 'uppercase',
-        letterSpacing: '0.06em',
-        textAlign: 'center',
-      }}>
-        Session Overview
-      </div>
-
-      {/* Metric row */}
+      {/* Metric row — frosted tiles */}
       <div style={{
         display: 'flex',
         gap: spacing.md,
@@ -76,7 +63,7 @@ export const SessionOverview: React.FC<SessionOverviewProps> = ({
         <MetricTile label="Elapsed" value={elapsedStr} />
         <MetricTile
           label="Sets"
-          value={totalSets > 0 ? `${setsCompleted} of ${totalSets}` : '—'}
+          value={totalSets > 0 ? `${setsCompleted} / ${totalSets}` : '—'}
         />
       </div>
 
@@ -84,10 +71,12 @@ export const SessionOverview: React.FC<SessionOverviewProps> = ({
       {lastCompletedSet && lastCompletedSet.laps.length > 0 && (
         <div style={{ flex: 1, minHeight: 0 }}>
           <div style={{
-            fontSize: deviceFontSizes.body,
-            fontWeight: fontWeights.medium,
-            color: colors.gray400,
+            fontSize: deviceFontSizes.caption,
+            fontWeight: fontWeights.light,
+            color: 'rgba(255,255,255,0.40)',
             marginBottom: spacing.sm,
+            textTransform: 'uppercase',
+            letterSpacing: '0.08em',
           }}>
             Last Set: {lastCompletedSet.setDefinition.name}
           </div>
@@ -100,19 +89,19 @@ export const SessionOverview: React.FC<SessionOverviewProps> = ({
               }))}>
                 <XAxis
                   dataKey="lap"
-                  tick={{ fill: colors.gray500, fontSize: 12 }}
-                  axisLine={{ stroke: colors.gray700 }}
+                  tick={{ fill: 'rgba(255,255,255,0.35)', fontSize: 11 }}
+                  axisLine={{ stroke: 'rgba(255,255,255,0.10)' }}
                   tickLine={false}
                 />
                 <YAxis
-                  tick={{ fill: colors.gray500, fontSize: 12 }}
+                  tick={{ fill: 'rgba(255,255,255,0.35)', fontSize: 11 }}
                   axisLine={false}
                   tickLine={false}
                   width={40}
                 />
                 <ReferenceLine
                   y={(lastCompletedSet.setDefinition.targetPacePer100Ms / 100 * lastCompletedSet.setDefinition.poolLength) / 1000}
-                  stroke={colors.gray500}
+                  stroke="rgba(255,255,255,0.20)"
                   strokeDasharray="4 4"
                 />
                 <Bar dataKey="split" radius={[4, 4, 0, 0]}>
@@ -135,8 +124,9 @@ export const SessionOverview: React.FC<SessionOverviewProps> = ({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          color: colors.gray600,
+          color: 'rgba(255,255,255,0.25)',
           fontSize: deviceFontSizes.label,
+          fontWeight: fontWeights.light,
         }}>
           No completed sets yet
         </div>
@@ -149,18 +139,19 @@ function MetricTile({ label, value }: { label: string; value: string }) {
   return (
     <div style={{
       flex: 1,
-      background: colors.gray800,
-      borderRadius: 8,
-      padding: spacing.md,
+      background: 'rgba(255,255,255,0.06)',
+      border: '1px solid rgba(255,255,255,0.10)',
+      borderRadius: 16,
+      padding: '10px 12px',
       textAlign: 'center',
     }}>
       <div style={{
-        fontSize: deviceFontSizes.body,
-        fontWeight: fontWeights.medium,
-        color: colors.gray400,
+        fontSize: deviceFontSizes.caption,
+        fontWeight: fontWeights.light,
+        color: 'rgba(255,255,255,0.40)',
         marginBottom: spacing.xs,
         textTransform: 'uppercase',
-        letterSpacing: '0.04em',
+        letterSpacing: '0.08em',
       }}>
         {label}
       </div>
@@ -176,7 +167,7 @@ function MetricTile({ label, value }: { label: string; value: string }) {
 }
 
 function lapColor(deltaMs: number, toleranceMs: number): string {
-  if (Math.abs(deltaMs) <= toleranceMs) return colors.green;
+  if (Math.abs(deltaMs) <= toleranceMs) return colors.accent;
   if (deltaMs <= toleranceMs * 4) return colors.amber;
   return colors.red;
 }

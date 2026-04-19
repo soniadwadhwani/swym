@@ -1,6 +1,6 @@
 import React from 'react';
 import { PaceStatus } from '@swym/design-system';
-import { colors, deviceFontSizes, fontWeights, spacing } from '@swym/design-system';
+import { colors, deviceFontSizes, fontWeights } from '@swym/design-system';
 
 interface PaceDeltaProps {
   deltaMs: number;
@@ -10,14 +10,14 @@ interface PaceDeltaProps {
 }
 
 const statusColorMap: Record<PaceStatus, string> = {
-  [PaceStatus.OnPace]: colors.green,
-  [PaceStatus.Ahead]: colors.green,
+  [PaceStatus.OnPace]: colors.accent,
+  [PaceStatus.Ahead]: colors.accent,
   [PaceStatus.SlightlyOff]: colors.amber,
   [PaceStatus.SignificantlyOff]: colors.red,
 };
 
 /**
- * Color-coded pace delta display: +2s (amber), -1s (green), etc.
+ * Color-coded pace delta display: +2s (teal), -1s (teal), +5s (red).
  */
 export const PaceDelta: React.FC<PaceDeltaProps> = ({ deltaMs, paceStatus, size = 'normal' }) => {
   const seconds = Math.round(deltaMs / 1000);

@@ -29,8 +29,7 @@ interface PostSetSummaryProps {
  *
  * ONE JOB: "How did the whole set go?"
  *
- * Auto-triggers on final lap detection.
- * Verdict badge, best/worst/on-pace grid, full lap chart, written insight.
+ * Frosted glass tiles, full lap chart, written insight, verdict pill.
  */
 export const PostSetSummary: React.FC<PostSetSummaryProps> = ({
   setRecord,
@@ -46,7 +45,8 @@ export const PostSetSummary: React.FC<PostSetSummaryProps> = ({
       display: 'flex',
       flexDirection: 'column',
       height: '100%',
-      padding: deviceLayout.screenPadding,
+      padding: `0 ${deviceLayout.screenPadding}px`,
+      paddingBottom: spacing.lg,
       gap: spacing.md,
     }}>
       {/* Header row: set name + verdict badge */}
@@ -56,24 +56,24 @@ export const PostSetSummary: React.FC<PostSetSummaryProps> = ({
         alignItems: 'center',
       }}>
         <div style={{
-          fontSize: deviceFontSizes.heading,
-          fontWeight: fontWeights.medium,
-          color: colors.gray400,
+          fontSize: deviceFontSizes.caption,
+          fontWeight: fontWeights.light,
+          color: 'rgba(255,255,255,0.40)',
           textTransform: 'uppercase',
-          letterSpacing: '0.04em',
+          letterSpacing: '0.10em',
         }}>
           {setDefinition.name}
         </div>
         <VerdictBadge verdict={verdict} />
       </div>
 
-      {/* 3-column metric grid */}
+      {/* 3-column frosted metric grid */}
       <div style={{ display: 'flex', gap: spacing.md }}>
         <SummaryTile
           label="Best Lap"
           value={formatTimeMs(bestLap.splitTimeMs)}
           sub={`Lap ${bestLap.lapNumber}`}
-          color={colors.green}
+          color={colors.accent}
         />
         <SummaryTile
           label="Worst Lap"
@@ -85,7 +85,7 @@ export const PostSetSummary: React.FC<PostSetSummaryProps> = ({
           label="On Pace"
           value={`${onPaceCount}/${totalLaps}`}
           sub={`${onPacePct}%`}
-          color={colors.purple}
+          color={colors.accent}
         />
       </div>
 
@@ -99,19 +99,19 @@ export const PostSetSummary: React.FC<PostSetSummaryProps> = ({
           }))}>
             <XAxis
               dataKey="lap"
-              tick={{ fill: colors.gray500, fontSize: 12 }}
-              axisLine={{ stroke: colors.gray700 }}
+              tick={{ fill: 'rgba(255,255,255,0.35)', fontSize: 11 }}
+              axisLine={{ stroke: 'rgba(255,255,255,0.10)' }}
               tickLine={false}
             />
             <YAxis
-              tick={{ fill: colors.gray500, fontSize: 12 }}
+              tick={{ fill: 'rgba(255,255,255,0.35)', fontSize: 11 }}
               axisLine={false}
               tickLine={false}
               width={40}
             />
             <ReferenceLine
               y={targetPerLapSec}
-              stroke={colors.gray500}
+              stroke="rgba(255,255,255,0.20)"
               strokeDasharray="4 4"
             />
             <Bar dataKey="split" radius={[4, 4, 0, 0]}>
@@ -126,19 +126,19 @@ export const PostSetSummary: React.FC<PostSetSummaryProps> = ({
       {/* Written insight */}
       <div style={{
         fontSize: deviceFontSizes.body,
-        color: colors.gray300,
+        color: 'rgba(255,255,255,0.60)',
         lineHeight: 1.5,
         textAlign: 'center',
-        padding: `${spacing.sm}px 0`,
+        fontWeight: fontWeights.light,
       }}>
         {insight}
       </div>
 
-      {/* Footer */}
+      {/* Footer hint */}
       <div style={{
         textAlign: 'center',
-        fontSize: deviceFontSizes.body,
-        color: colors.gray500,
+        fontSize: deviceFontSizes.hint,
+        color: 'rgba(255,255,255,0.40)',
       }}>
         press either button to continue
       </div>
@@ -160,18 +160,19 @@ function SummaryTile({
   return (
     <div style={{
       flex: 1,
-      background: colors.gray800,
-      borderRadius: 8,
-      padding: spacing.md,
+      background: 'rgba(255,255,255,0.06)',
+      border: '1px solid rgba(255,255,255,0.10)',
+      borderRadius: 16,
+      padding: '8px 10px',
       textAlign: 'center',
     }}>
       <div style={{
-        fontSize: 13,
-        fontWeight: fontWeights.medium,
-        color: colors.gray400,
-        marginBottom: spacing.xs,
+        fontSize: 11,
+        fontWeight: fontWeights.light,
+        color: 'rgba(255,255,255,0.40)',
+        marginBottom: 2,
         textTransform: 'uppercase',
-        letterSpacing: '0.04em',
+        letterSpacing: '0.08em',
       }}>
         {label}
       </div>
@@ -183,9 +184,9 @@ function SummaryTile({
         {value}
       </div>
       <div style={{
-        fontSize: 13,
-        color: colors.gray500,
-        marginTop: 2,
+        fontSize: 11,
+        color: 'rgba(255,255,255,0.35)',
+        marginTop: 1,
       }}>
         {sub}
       </div>
@@ -194,7 +195,7 @@ function SummaryTile({
 }
 
 function lapBarColor(deltaMs: number, toleranceMs: number): string {
-  if (Math.abs(deltaMs) <= toleranceMs) return colors.green;
+  if (Math.abs(deltaMs) <= toleranceMs) return colors.accent;
   if (deltaMs <= toleranceMs * 4) return colors.amber;
   return colors.red;
 }

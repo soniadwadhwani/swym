@@ -12,12 +12,9 @@ interface LeaderboardScreenProps {
  *
  * ONE JOB: "Who is winning?"
  *
- * Designed to be left visible during competitive training sets as social pressure.
- * Large text: rank, name, pace. NOTHING ELSE.
- * No delta, no lap count, no trend. Pure competitive ranking.
+ * Designed for social pressure. Large, minimal, pure ranking.
  */
 export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({ rings }) => {
-  // Sort by average pace (deltaMs ascending — lower delta = better performance)
   const sorted = [...rings]
     .filter(r => !r.signalLost && r.currentLap > 0)
     .sort((a, b) => a.deltaMs - b.deltaMs);
@@ -27,21 +24,9 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({ rings }) =
       display: 'flex',
       flexDirection: 'column',
       height: '100%',
-      padding: deviceLayout.screenPadding,
+      padding: `0 ${deviceLayout.screenPadding}px`,
+      paddingBottom: deviceLayout.screenPadding,
     }}>
-      {/* Header */}
-      <div style={{
-        fontSize: deviceFontSizes.heading,
-        fontWeight: fontWeights.medium,
-        color: colors.gray400,
-        textTransform: 'uppercase',
-        letterSpacing: '0.06em',
-        textAlign: 'center',
-        marginBottom: spacing.lg,
-      }}>
-        Leaderboard
-      </div>
-
       {/* Ranked rows */}
       <div style={{
         flex: 1,
@@ -57,17 +42,17 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({ rings }) =
               alignItems: 'center',
               height: deviceLayout.leaderboardRowHeight,
               padding: `0 ${spacing.lg}px`,
-              background: index === 0 ? `${colors.purple}20` : colors.gray800,
-              borderRadius: 8,
-              borderLeft: index === 0 ? `4px solid ${colors.purple}` : '4px solid transparent',
+              background: 'rgba(255,255,255,0.04)',
+              borderRadius: 12,
+              borderLeft: index === 0 ? `3px solid ${colors.accent}` : '3px solid transparent',
             }}
           >
             {/* Rank */}
             <div style={{
-              width: 36,
-              fontSize: deviceFontSizes.metricLarge,
+              width: 32,
+              fontSize: deviceFontSizes.metric,
               fontWeight: fontWeights.medium,
-              color: index === 0 ? colors.purple : colors.gray500,
+              color: index === 0 ? colors.accent : 'rgba(255,255,255,0.30)',
               textAlign: 'center',
             }}>
               {index + 1}
@@ -76,7 +61,7 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({ rings }) =
             {/* Name */}
             <div style={{
               flex: 1,
-              fontSize: deviceFontSizes.metric,
+              fontSize: deviceFontSizes.heading,
               fontWeight: fontWeights.medium,
               color: colors.white,
               marginLeft: spacing.md,
@@ -86,9 +71,9 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({ rings }) =
 
             {/* Pace (last split) */}
             <div style={{
-              fontSize: deviceFontSizes.metric,
-              fontWeight: fontWeights.medium,
-              color: colors.gray300,
+              fontSize: deviceFontSizes.heading,
+              fontWeight: fontWeights.light,
+              color: 'rgba(255,255,255,0.50)',
             }}>
               {ring.lastSplitMs > 0 ? formatTimeMs(ring.lastSplitMs) : '—'}
             </div>
@@ -101,8 +86,9 @@ export const LeaderboardScreen: React.FC<LeaderboardScreenProps> = ({ rings }) =
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            color: colors.gray600,
+            color: 'rgba(255,255,255,0.25)',
             fontSize: deviceFontSizes.label,
+            fontWeight: fontWeights.light,
           }}>
             Waiting for lap data…
           </div>
